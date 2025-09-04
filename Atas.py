@@ -338,16 +338,26 @@ def item1_single_paragraph(meeting: dict, scenarios: dict) -> str:
 
 
 def item3_html(meeting: dict) -> str:
-    d = date.fromisoformat(meeting["data"]); d2 = menos_dois_meses(d); mes_ano = mes_ano_pt(d2)
-    p0 = ("O Comitê de Investimentos, buscando transmitir maior transparência em relação às análises dos investimentos do Instituto e, em consequência, "
-          "aderindo às normas do Pró-Gestão, elabora o "Relatório de Análise de Investimentos IPAJM". "
-          "Este relatório já foi encaminhado à SCO – Subgerência de Contabilidade e Orçamento, para posterior envio para análise do Conselho Fiscal do IPAJM. "
+    d = date.fromisoformat(meeting["data"])
+    d2 = menos_dois_meses(d)
+    mes_ano = mes_ano_pt(d2)
+    
+    p0 = ("O Comitê de Investimentos, buscando transmitir maior transparência em relação às análises dos investimentos do Instituto e, em consequência, " +
+          "aderindo às normas do Pró-Gestão, elabora o "Relatório de Análise de Investimentos IPAJM". " +
+          "Este relatório já foi encaminhado à SCO – Subgerência de Contabilidade e Orçamento, para posterior envio para análise do Conselho Fiscal do IPAJM. " +
           f"Segue abaixo um resumo relativo aos itens abordados no Relatório supracitado de {mes_ano}:")
-    r = STATE["resumo"]; rentab=r["rentab"]; difpp=r["difpp"]; pos=r["posicao"]; risco=r["risco"]
+    
+    r = STATE["resumo"]
+    rentab = r["rentab"]
+    difpp = r["difpp"]
+    pos = r["posicao"]
+    risco = r["risco"]
+    
     p1 = f"1) Acompanhamento da rentabilidade -  A rentabilidade consolidada dos investimentos do Fundo Previdenciário em {mes_ano} foi de {rentab}, ficando {difpp} p.p. {pos} da meta atuarial."
     p2 = f"2) Avaliação de risco da carteira - O grau de variação nas rentabilidades está coerente com o grau de risco assumido, em {risco}."
     p3 = f"3) Execução da Política de Investimentos – As movimentações financeiras realizadas no mês de {mes_ano} estão de acordo com as deliberações estabelecidas com a Diretoria de Investimentos e com a legislação vigente."
     p4 = f"4) Aderência a Política de Investimentos - Os recursos investidos, abrangendo a carteira consolidada, que representa o patrimônio total do RPPS sob gestão, estão aderentes à Política de Investimentos de {meeting['ano']}, respeitando o estabelecido na legislação em vigor e dentro dos percentuais definidos.  Considerando que as taxas ainda são negociadas acima da meta atuarial, seguimos com a estratégia de alcançar o alvo definido de 60% de alocação em Títulos Públicos."
+    
     return "\n".join([f"<p><strong>{t}</strong></p>" if i==0 else f"<p>{t}</p>" for i,t in enumerate([p0,p1,p2,p3,p4])])
 
 def ata_html_full(meeting: dict, scenarios: dict) -> str:
@@ -628,3 +638,4 @@ if __name__ == "__main__":
     # Para produção, a porta será definida pelo Render
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
+
