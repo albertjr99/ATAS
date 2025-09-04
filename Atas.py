@@ -15,7 +15,7 @@ from docx import Document as DocxDocument
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from xhtml2pdf import pisa
-
+aa
 APP_TITLE = "Sistema de Atas — Comitê de Investimentos"
 PARTICIPANTES = [
     "Albert Iglésia Correa dos Santos Júnior",
@@ -638,4 +638,5 @@ if __name__ == "__main__":
     # Para produção, a porta será definida pelo Render
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
+
 
