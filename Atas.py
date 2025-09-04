@@ -291,9 +291,6 @@ ITEM2_DEFAULT = "Não houve realocações de recursos desde a última reunião a
 ASSUNTOS_DEFAULT = "– Assuntos gerais discutidos e/ou Eventos:"
 STATE = {"item2": ITEM2_DEFAULT, "assuntos": ASSUNTOS_DEFAULT, "resumo": {"rentab": "", "difpp": "", "posicao": "abaixo", "risco": ""}}
 
-# --------------------- App
-app = FastAPI(title=APP_TITLE)
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     os.makedirs(STATIC_DIR, exist_ok=True)
@@ -644,6 +641,7 @@ if __name__ == "__main__":
     # Para produção, a porta será definida pelo Render
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
+
 
 
 
