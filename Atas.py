@@ -1,4 +1,4 @@
-# Atas.py — rev7.3 (VERSÃO RENDER - espaçamento como no modelo; cabeçalho imagem; gênero no Item 01)
+# Atas.py — rev7.3 (espaçamento como no modelo; cabeçalho imagem; gênero no Item 01)
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, StreamingResponse
 from starlette.responses import Response
@@ -26,14 +26,13 @@ PARTICIPANTES = [
 ]
 CARGO = "Membro do Comitê de Investimentos"
 
-# Mulheres (para "A Sra.")
+# Mulheres (para “A Sra.”)
 PARTICIPANTES_MULHERES = {
     "Shirlene Pires Mesquita",
     "Mariana Schneider Viana",
     "Tatiana Gasparini Silva Stelzer",
 }
 
-# CONFIGURAÇÃO PARA RENDER - usa variável de ambiente para DATABASE_URL
 DB_PATH = os.getenv("DATABASE_URL", "./atas.db")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
@@ -291,6 +290,9 @@ ITEM2_DEFAULT = "Não houve realocações de recursos desde a última reunião a
 ASSUNTOS_DEFAULT = "– Assuntos gerais discutidos e/ou Eventos:"
 STATE = {"item2": ITEM2_DEFAULT, "assuntos": ASSUNTOS_DEFAULT, "resumo": {"rentab": "", "difpp": "", "posicao": "abaixo", "risco": ""}}
 
+# --------------------- App
+app = FastAPI(title=APP_TITLE)
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     os.makedirs(STATIC_DIR, exist_ok=True)
@@ -310,9 +312,37 @@ def item1_single_paragraph(meeting: dict, scenarios: dict) -> str:
     d = date.fromisoformat(meeting["data"])
 
     ORDINAIS = {
-        1: "primeiro", 2: "segundo", 3: "terceiro", 4: "quarto", 5: "quinto", 6: "sexto", 7: "sétimo", 8: "oitavo", 9: "nono", 10: "décimo",
-        11: "décimo primeiro", 12: "décimo segundo", 13: "décimo terceiro", 14: "décimo quarto", 15: "décimo quinto", 16: "décimo sexto", 17: "décimo sétimo", 18: "décimo oitavo", 19: "décimo nono", 20: "vigésimo",
-        21: "vigésimo primeiro", 22: "vigésimo segundo", 23: "vigésimo terceiro", 24: "vigésimo quarto", 25: "vigésimo quinto", 26: "vigésimo sexto", 27: "vigésimo sétimo", 28: "vigésimo oitavo", 29: "vigésimo nono", 30: "trigésimo", 31: "trigésimo primeiro"
+        1: "primeiro",
+        2: "segundo",
+        3: "terceiro",
+        4: "quarto",
+        5: "quinto",
+        6: "sexto",
+        7: "sétimo",
+        8: "oitavo",
+        9: "nono",
+        10: "décimo",
+        11: "décimo primeiro",
+        12: "décimo segundo",
+        13: "décimo terceiro",
+        14: "décimo quarto",
+        15: "décimo quinto",
+        16: "décimo sexto",
+        17: "décimo sétimo",
+        18: "décimo oitavo",
+        19: "décimo nono",
+        20: "vigésimo",
+        21: "vigésimo primeiro",
+        22: "vigésimo segundo",
+        23: "vigésimo terceiro",
+        24: "vigésimo quarto",
+        25: "vigésimo quinto",
+        26: "vigésimo sexto",
+        27: "vigésimo sétimo",
+        28: "vigésimo oitavo",
+        29: "vigésimo nono",
+        30: "trigésimo",
+        31: "trigésimo primeiro"
     }
 
     intro = (
@@ -335,26 +365,16 @@ def item1_single_paragraph(meeting: dict, scenarios: dict) -> str:
 
 
 def item3_html(meeting: dict) -> str:
-    d = date.fromisoformat(meeting["data"])
-    d2 = menos_dois_meses(d)
-    mes_ano = mes_ano_pt(d2)
-    
+    d = date.fromisoformat(meeting["data"]); d2 = menos_dois_meses(d); mes_ano = mes_ano_pt(d2)
     p0 = ("O Comitê de Investimentos, buscando transmitir maior transparência em relação às análises dos investimentos do Instituto e, em consequência, "
-      "aderindo às normas do Pró-Gestão, elabora o 'Relatório de Análise de Investimentos IPAJM'. "
-      "Este relatório já foi encaminhado à SCO – Subgerência de Contabilidade e Orçamento, para posterior envio para análise do Conselho Fiscal do IPAJM. "
-      f"Segue abaixo um resumo relativo aos itens abordados no Relatório supracitado de {mes_ano}:")
-    
-    r = STATE["resumo"]
-    rentab = r["rentab"]
-    difpp = r["difpp"]
-    pos = r["posicao"]
-    risco = r["risco"]
-    
+          "aderindo às normas do Pró-Gestão, elabora o “Relatório de Análise de Investimentos IPAJM”. "
+          "Este relatório já foi encaminhado à SCO – Subgerência de Contabilidade e Orçamento, para posterior envio para análise do Conselho Fiscal do IPAJM. "
+          f"Segue abaixo um resumo relativo aos itens abordados no Relatório supracitado de {mes_ano}:")
+    r = STATE["resumo"]; rentab=r["rentab"]; difpp=r["difpp"]; pos=r["posicao"]; risco=r["risco"]
     p1 = f"1) Acompanhamento da rentabilidade -  A rentabilidade consolidada dos investimentos do Fundo Previdenciário em {mes_ano} foi de {rentab}, ficando {difpp} p.p. {pos} da meta atuarial."
     p2 = f"2) Avaliação de risco da carteira - O grau de variação nas rentabilidades está coerente com o grau de risco assumido, em {risco}."
     p3 = f"3) Execução da Política de Investimentos – As movimentações financeiras realizadas no mês de {mes_ano} estão de acordo com as deliberações estabelecidas com a Diretoria de Investimentos e com a legislação vigente."
     p4 = f"4) Aderência a Política de Investimentos - Os recursos investidos, abrangendo a carteira consolidada, que representa o patrimônio total do RPPS sob gestão, estão aderentes à Política de Investimentos de {meeting['ano']}, respeitando o estabelecido na legislação em vigor e dentro dos percentuais definidos.  Considerando que as taxas ainda são negociadas acima da meta atuarial, seguimos com a estratégia de alcançar o alvo definido de 60% de alocação em Títulos Públicos."
-    
     return "\n".join([f"<p><strong>{t}</strong></p>" if i==0 else f"<p>{t}</p>" for i,t in enumerate([p0,p1,p2,p3,p4])])
 
 def ata_html_full(meeting: dict, scenarios: dict) -> str:
@@ -385,12 +405,16 @@ def ata_html_full(meeting: dict, scenarios: dict) -> str:
         f"<p><strong>{PARTICIPANTES[2]}</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{PARTICIPANTES[3]}</strong><br/>{CARGO}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{CARGO}</p>",
         f"<p><strong>{PARTICIPANTES[4]}</strong><br/>{CARGO}</p>",
     ]
-    # Cabeçalho HTML/PDF - AJUSTADO PARA FUNCIONAR SEM IMAGENS
+    # Cabeçalho HTML/PDF
+    brasao = os.path.join(STATIC_DIR, "brasao.png")
+    simbolo = os.path.join(STATIC_DIR, "simbolo.png")
     header_html = f"""
-    <div style="width:100%; display:flex; align-items:center; justify-content:center; margin-bottom:8px;">
+    <div style="width:100%; display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+      <img src="{brasao}" style="height:42px"/>
       <div style="text-align:center; font-family: Calibri; font-size:11pt; font-weight:700; color:#000;">
         GOVERNO DO ESTADO DO ESPÍRITO SANTO<br/>INSTITUTO DE PREVIDÊNCIA DOS<br/>SERVIDORES DO ESTADO DO ESPÍRITO SANTO
       </div>
+      <img src="{simbolo}" style="height:42px"/>
     </div>
     <div style="border-bottom:1px solid #000; margin:2px 0 8px 0; text-align:center;">IPAJM</div>
     """
@@ -490,8 +514,12 @@ def _set_cell_borders(cell, bottom=True):
     tcPr.append(tcBorders)
 
 def _add_header_image(doc: DocxDocument, path=os.path.join(STATIC_DIR, "cabecalho.png"), width_inches=6.5):
-    # REMOVIDO PARA PRODUÇÃO - funcionará sem imagem
-    pass
+    if not os.path.exists(path): return
+    header = doc.sections[0].header
+    p = header.paragraphs[0] if header.paragraphs else header.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.add_run().add_picture(path, width=Inches(width_inches))
+    p.paragraph_format.space_after = Pt(0)
 
 def _add_paragraph(doc, text, bold=False, align=WD_ALIGN_PARAGRAPH.JUSTIFY, space_after_pt=0):
     p = doc.add_paragraph()
@@ -516,8 +544,44 @@ def _prefixo_genero_docx(nome: str) -> str:
 
 def _item01_single_paragraph_docx(doc, meeting, scenarios, space_after_pt=SECTION_GAP):
     d = date.fromisoformat(meeting["data"])
-    ORDINAIS = {1: "primeiro", 2: "segundo", 3: "terceiro", 4: "quarto", 5: "quinto", 6: "sexto", 7: "sétimo", 8: "oitavo", 9: "nono", 10: "décimo", 11: "décimo primeiro", 12: "décimo segundo", 13: "décimo terceiro", 14: "décimo quarto", 15: "décimo quinto", 16: "décimo sexto", 17: "décimo sétimo", 18: "décimo oitavo", 19: "décimo nono", 20: "vigésimo", 21: "vigésimo primeiro", 22: "vigésimo segundo", 23: "vigésimo terceiro", 24: "vigésimo quarto", 25: "vigésimo quinto", 26: "vigésimo sexto", 27: "vigésimo sétimo", 28: "vigésimo oitavo", 29: "vigésimo nono", 30: "trigésimo", 31: "trigésimo primeiro"}
-    intro = (f"No {ORDINAIS.get(d.day, str(d.day))} dia do mês de {mes_ano_pt(d).split(' de ')[0]} às {meeting['hora']} horas, na {meeting['local']}, ocorreu a {meeting['numero']}ª Reunião Ordinária dos Membros do Comitê de Investimentos. ")
+    ORDINAIS = {
+        1: "primeiro",
+        2: "segundo",
+        3: "terceiro",
+        4: "quarto",
+        5: "quinto",
+        6: "sexto",
+        7: "sétimo",
+        8: "oitavo",
+        9: "nono",
+        10: "décimo",
+        11: "décimo primeiro",
+        12: "décimo segundo",
+        13: "décimo terceiro",
+        14: "décimo quarto",
+        15: "décimo quinto",
+        16: "décimo sexto",
+        17: "décimo sétimo",
+        18: "décimo oitavo",
+        19: "décimo nono",
+        20: "vigésimo",
+        21: "vigésimo primeiro",
+        22: "vigésimo segundo",
+        23: "vigésimo terceiro",
+        24: "vigésimo quarto",
+        25: "vigésimo quinto",
+        26: "vigésimo sexto",
+        27: "vigésimo sétimo",
+        28: "vigésimo oitavo",
+        29: "vigésimo nono",
+        30: "trigésimo",
+        31: "trigésimo primeiro"
+    }
+    intro = (
+        f"No {ORDINAIS.get(d.day, str(d.day))} dia do mês de {mes_ano_pt(d).split(' de ')[0]} "
+        f"às {meeting['hora']} horas, na {meeting['local']}, ocorreu a {meeting['numero']}ª "
+        f"Reunião Ordinária dos Membros do Comitê de Investimentos. "
+    )
     p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
     r = p.add_run(intro); r.font.name = "Calibri"; r.font.size = Pt(11)
     for nome in PARTICIPANTES:
@@ -562,19 +626,23 @@ async def export_docx():
     doc = DocxDocument()
     style = doc.styles["Normal"]; style.font.name = "Calibri"; style.font.size = Pt(11)
 
-    # Cabeçalho textual (sem imagem para produção)
-    _add_paragraph(doc, "GOVERNO DO ESTADO DO ESPÍRITO SANTO", bold=True, align=WD_ALIGN_PARAGRAPH.CENTER)
-    _add_paragraph(doc, "INSTITUTO DE PREVIDÊNCIA DOS SERVIDORES DO ESTADO DO ESPÍRITO SANTO", bold=True, align=WD_ALIGN_PARAGRAPH.CENTER)
-    _add_paragraph(doc, "IPAJM", bold=True, align=WD_ALIGN_PARAGRAPH.CENTER, space_after_pt=12)
+    # Cabeçalho (imagem) + espaço antes do primeiro título
+    _add_header_image(doc, os.path.join(STATIC_DIR, "cabecalho.png"))
 
     # Sessão
     p_titulo = _add_title(doc, f"Sessão Ordinária nº {numero_fmt}", space_after_pt=TITLE_GAP)
     p_titulo.paragraph_format.space_before = Pt(HEADER_GAP)
 
+    p = doc.add_paragraph()
+    p.paragraph_format.space_after = Pt(4)  # controla a altura do espaço
+
     # Data / Hora / Local
     _add_label_value(doc, "Data", ptbr_date(d), space_after_pt=0)
     _add_label_value(doc, "Hora", f"{meeting['hora']}h", space_after_pt=0)
     _add_label_value(doc, "Local", meeting["local"], space_after_pt=SECTION_GAP)
+
+    p = doc.add_paragraph()
+    p.paragraph_format.space_after = Pt(10)  # controla a altura do espaço
 
     # Presenças
     _add_title(doc, "Presenças:", space_after_pt=TITLE_GAP)
@@ -586,6 +654,9 @@ async def export_docx():
         last_p = p
     if last_p: last_p.paragraph_format.space_after = Pt(SECTION_GAP)
 
+    p = doc.add_paragraph()
+    p.paragraph_format.space_after = Pt(10)  # controla a altura do espaço
+
     # Ordem do Dia
     _add_title(doc, "Ordem do Dia:", space_after_pt=TITLE_GAP)
     _add_paragraph(doc, "1. Cenário Político e Econômico Interno e Cenário Econômico Externo (EUA, Europa e China);", False, WD_ALIGN_PARAGRAPH.LEFT, space_after_pt=0)
@@ -593,24 +664,30 @@ async def export_docx():
     _add_paragraph(doc, "3. Acompanhamento dos Recursos Investidos;", False, WD_ALIGN_PARAGRAPH.LEFT, space_after_pt=0)
     _add_paragraph(doc, "4. Assuntos Gerais.", False, WD_ALIGN_PARAGRAPH.LEFT, space_after_pt=SECTION_GAP)
 
+    p = doc.add_paragraph()
+    p.paragraph_format.space_after = Pt(10)  # controla a altura do espaço
+
     # Item 01
     _add_title(doc, "Item 01 – Cenário Político e Econômico Interno e Cenário Econômico Externo (EUA, Europa e China):", space_after_pt=TITLE_GAP)
     _item01_single_paragraph_docx(doc, meeting, scenarios, space_after_pt=SECTION_GAP)
+
+    p = doc.add_paragraph()
+    p.paragraph_format.space_after = Pt(10)  # controla a altura do espaço
 
     # Item 02
     _add_title(doc, "Item 02 – Movimentações e Aplicações financeiras", space_after_pt=TITLE_GAP)
     _add_paragraph(doc, STATE["item2"], False, WD_ALIGN_PARAGRAPH.JUSTIFY, space_after_pt=SECTION_GAP)
 
+    p = doc.add_paragraph()
+    p.paragraph_format.space_after = Pt(10)  # controla a altura do espaço
+
     # Item 03
     _add_title(doc, "Item 03 – Acompanhamento dos Recursos Investidos:", space_after_pt=TITLE_GAP)
     d2 = menos_dois_meses(d); mes_ano = mes_ano_pt(d2)
-    p0 = (
-    "O Comitê de Investimentos, buscando transmitir maior transparência em relação às análises dos investimentos do Instituto e, em consequência, "
-    "aderindo às normas do Pró-Gestão, elabora o 'Relatório de Análise de Investimentos IPAJM'. "
-    "Este relatório já foi encaminhado à SCO – Subgerência de Contabilidade e Orçamento, para posterior envio para análise do Conselho Fiscal do IPAJM. "
-    f"Segue abaixo um resumo relativo aos itens abordados no Relatório supracitado de {mes_ano}:"
-)
-
+    p0 = ("O Comitê de Investimentos, buscando transmitir maior transparência em relação às análises dos investimentos do Instituto e, em consequência, "
+          "aderindo às normas do Pró-Gestão, elabora o “Relatório de Análise de Investimentos IPAJM”. Este relatório já foi encaminhado à SCO – Subgerência de Contabilidade e Orçamento, "
+          "para posterior envio para análise do Conselho Fiscal do IPAJM. "
+          f"Segue abaixo um resumo relativo aos itens abordados no Relatório supracitado de {mes_ano}:")
     _add_paragraph(doc, p0, False, WD_ALIGN_PARAGRAPH.JUSTIFY, space_after_pt=0)
     r = STATE["resumo"]; rentab=r["rentab"]; difpp=r["difpp"]; pos=r["posicao"]; risco=r["risco"]
     _add_paragraph(doc, f"1) Acompanhamento da rentabilidade -  A rentabilidade consolidada dos investimentos do Fundo Previdenciário em {mes_ano} foi de {rentab}, ficando {difpp} p.p. {pos} da meta atuarial.", False, space_after_pt=0)
@@ -618,16 +695,33 @@ async def export_docx():
     _add_paragraph(doc, f"3) Execução da Política de Investimentos – As movimentações financeiras realizadas no mês de {mes_ano} estão de acordo com as deliberações estabelecidas com a Diretoria de Investimentos e com a legislação vigente.", False, space_after_pt=0)
     _add_paragraph(doc, f"4) Aderência a Política de Investimentos - Os recursos investidos, abrangendo a carteira consolidada, que representa o patrimônio total do RPPS sob gestão, estão aderentes à Política de Investimentos de {meeting['ano']}, respeitando o estabelecido na legislação em vigor e dentro dos percentuais definidos.  Considerando que as taxas ainda são negociadas acima da meta atuarial, seguimos com a estratégia de alcançar o alvo definido de 60% de alocação em Títulos Públicos.", False, space_after_pt=SECTION_GAP)
 
+
+    p = doc.add_paragraph()
+    p.paragraph_format.space_after = Pt(10)  # controla a altura do espaço
+
     # Item 04
     _add_title(doc, "Item 04 – Assuntos Gerais", space_after_pt=TITLE_GAP)
     _add_paragraph(doc, STATE["assuntos"], False, WD_ALIGN_PARAGRAPH.JUSTIFY, space_after_pt=SECTION_GAP)
 
-    # Fecho
-    lav = (meeting.get("lavrador") or "").strip() or "___________________________________"
-    _add_paragraph(doc, f"Nada mais havendo a tratar, foi encerrada a reunião e eu, {lav}, lavrei a presente Ata, assinada pelos membros presentes do Comitê de Investimentos.", False, space_after_pt=SECTION_GAP)
+    p = doc.add_paragraph()
+    p.paragraph_format.space_after = Pt(10)  # controla a altura do espaço
 
-    # Assinaturas
+  # Fecho
+    lav = (meeting.get("lavrador") or "").strip() or "___________________________________"
+    _add_paragraph(
+      doc,
+      f"Nada mais havendo a tratar, foi encerrada a reunião e eu, {lav}, lavrei a presente Ata, assinada pelos membros presentes do Comitê de Investimentos.",
+      False,
+      space_after_pt=SECTION_GAP
+)
+
+# Espaço extra antes das assinaturas (1 linha vazia)
+    p = doc.add_paragraph()
+    p.paragraph_format.space_after = Pt(10)  # controla a altura do espaço
+
+# Assinaturas
     _assinaturas_table(doc)
+
 
     # Saída
     buf = io.BytesIO(); doc.save(buf); buf.seek(0)
@@ -635,17 +729,6 @@ async def export_docx():
     return StreamingResponse(buf, media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                              headers={"Content-Disposition": f"attachment; filename={filename}"})
 
-# ===== CONFIGURAÇÃO PARA RENDER =====
 if __name__ == "__main__":
     import uvicorn
-    # Para produção, a porta será definida pelo Render
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
-
-
-
-
-
-
-
-
+    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
