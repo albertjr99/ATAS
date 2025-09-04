@@ -1,4 +1,3 @@
-
 services:
   - type: web
     name: sistema-atas
@@ -10,7 +9,6 @@ services:
     startCommand: python Atas.py
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.9
+        value: 3.13.0
       - key: PORT
         generateValue: true
-
