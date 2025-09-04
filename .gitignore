@@ -1,0 +1,66 @@
+# Arquivos compilados Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Ambientes virtuais
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Banco de dados local (importante!)
+*.db
+atas.db
+db.sqlite3
+db.sqlite3-journal
+
+# Logs e arquivos temporários
+*.log
+*.tmp
+*.temp
+*~
+*.bak
+*.backup
+
+# Arquivos do sistema operacional
+.DS_Store          # macOS
+Thumbs.db          # Windows
+ehthumbs.db        # Windows
+Desktop.ini        # Windows
+
+# IDEs e editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Distribuição/build
+build/
+dist/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Testes e coverage
+.coverage
+.pytest_cache/
+htmlcov/
+.tox/
+
+# Arquivos de configuração local
+local_settings.py
+.env.local
+
+# Node.js (caso use no futuro)
+node_modules/
+npm-debug.log*
+
+# Arquivos de backup do editor
+*~
+.*.swp
+.*.swo
