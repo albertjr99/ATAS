@@ -342,10 +342,10 @@ def item3_html(meeting: dict) -> str:
     d2 = menos_dois_meses(d)
     mes_ano = mes_ano_pt(d2)
     
-    p0 = ("O Comitê de Investimentos, buscando transmitir maior transparência em relação às análises dos investimentos do Instituto e, em consequência, " +
-          "aderindo às normas do Pró-Gestão, elabora o "Relatório de Análise de Investimentos IPAJM". " +
-          "Este relatório já foi encaminhado à SCO – Subgerência de Contabilidade e Orçamento, para posterior envio para análise do Conselho Fiscal do IPAJM. " +
-          f"Segue abaixo um resumo relativo aos itens abordados no Relatório supracitado de {mes_ano}:")
+    p0 = ("O Comitê de Investimentos, buscando transmitir maior transparência em relação às análises dos investimentos do Instituto e, em consequência, "
+      "aderindo às normas do Pró-Gestão, elabora o 'Relatório de Análise de Investimentos IPAJM'. "
+      "Este relatório já foi encaminhado à SCO – Subgerência de Contabilidade e Orçamento, para posterior envio para análise do Conselho Fiscal do IPAJM. "
+      f"Segue abaixo um resumo relativo aos itens abordados no Relatório supracitado de {mes_ano}:")
     
     r = STATE["resumo"]
     rentab = r["rentab"]
@@ -638,6 +638,7 @@ if __name__ == "__main__":
     # Para produção, a porta será definida pelo Render
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
+
 
 
 
