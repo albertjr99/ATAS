@@ -23,7 +23,7 @@ PARTICIPANTES = [
     "Mariana Schneider Viana",
     "Shirlene Pires Mesquita",
     "Tatiana Gasparini Silva Stelzer",
-]
+]a
 CARGO = "Membro do Comitê de Investimentos"
 
 # Mulheres (para "A Sra.")
@@ -638,6 +638,7 @@ if __name__ == "__main__":
     # Para produção, a porta será definida pelo Render
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
+
 
 
 
